@@ -1,0 +1,21 @@
+{
+  "family": "mi-task-fargate",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "containerDefinitions": [
+    {
+      "name": "mi-contenedor",
+      "image": "REEMPLAZAR",
+      "cpu": 256,
+      "memory": 512,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "hostPort": 3000
+        }
+      ]
+    }
+  ],
+  "executionRoleArn": "arn:aws:iam::472188560076:role/github-pipeline"
+}
