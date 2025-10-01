@@ -21,7 +21,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::472188560076:role/github-pipeline
-        aws-region: ${{ secrets.AWS_REGION }}
+        aws-region: us-west-2
 
     - name: Login to Amazon ECR
       id: login-ecr
@@ -30,8 +30,8 @@ jobs:
     - name: Build, tag, and push Docker image to ECR
       run: |
         IMAGE_TAG=${{ github.sha }}
-        docker build -t ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG .
-        docker push ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
+        docker build -t 472188560076.dkr.ecr.us-west-2.amazonaws.com/mi-nestjs-app:$IMAGE_TAG .
+        docker push 472188560076.dkr.ecr.us-west-2.amazonaws.com/mi-nestjs-app:$IMAGE_TAG
         echo "IMAGE_TAG?$IMAGE_TAG" >> $GITHUB_ENV
 
     - name: Render ECS task definition
@@ -40,12 +40,12 @@ jobs:
       with:
         task-definition: ecs-task-def.json
         container-name: mi-nestjs-app
-        image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+        image: 472188560076.dkr.ecr.us-west-2.amazonaws.com/mi-nestjs-app:${{ env.IMAGE_TAG }}
 
     - name: Deploy to ECS
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         task-definition: ${{ steps.task-def.outputs.task-definition }}
-        service: ${{ secrets.ECS_SERVICE }}
-        cluster: ${{ secrets.ECS_CLUSTER }}
+        service: mi-nestjs-task-service-61kboknd
+        cluster: nest-apps-cluster
         wait-for-service-stability: true
