@@ -5,8 +5,8 @@ WORKDIR /app
 
 COPY package*.json ./
 
-# Instalamos todas las dependencias (incluyendo devDependencies necesarias para build)
-RUN npm install
+# Instalamos dependencias (incluyendo devDependencies necesarias para build)
+RUN npm ci
 
 # Copiamos el resto del código
 COPY . .
@@ -20,16 +20,21 @@ FROM node:18-alpine AS runner
 
 WORKDIR /app
 
+# Copiamos solo package.json y package-lock.json
 COPY package*.json ./
 
 # Instalamos solo dependencias de producción
-RUN npm install --only=production
+RUN npm ci --only=production
 
 # Copiamos el build desde la etapa anterior
 COPY --from=builder /app/dist ./dist
 
 # Puerto de la app
 EXPOSE 3000
+
+# Opcional: usar usuario no root por seguridad
+RUN addgroup -S app && adduser -S app -G app
+USER app
 
 # Comando de inicio
 CMD ["node", "dist/main.js"]
