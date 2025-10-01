@@ -3,15 +3,16 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
+# Copiamos package.json y package-lock.json
 COPY package*.json ./
 
-# Instalamos dependencias (incluyendo devDependencies necesarias para build)
+# Instalamos TODAS las dependencias (incluyendo devDependencies necesarias para compilar)
 RUN npm ci
 
 # Copiamos el resto del código
 COPY . .
 
-# Compilamos el proyecto NestJS (de TypeScript a JS)
+# Compilamos el proyecto (NestJS → JS)
 RUN npm run build
 
 
@@ -23,16 +24,16 @@ WORKDIR /app
 # Copiamos solo package.json y package-lock.json
 COPY package*.json ./
 
-# Instalamos solo dependencias de producción
-RUN npm ci --only=production
+# Instalamos SOLO dependencias productivas
+RUN npm ci --omit=dev
 
 # Copiamos el build desde la etapa anterior
 COPY --from=builder /app/dist ./dist
 
-# Puerto de la app
+# Exponemos el puerto de la app
 EXPOSE 3000
 
-# Opcional: usar usuario no root por seguridad
+# (Opcional) Seguridad extra: usuario no root
 RUN addgroup -S app && adduser -S app -G app
 USER app
 
