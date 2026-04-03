@@ -25,16 +25,14 @@ export function createIdentificationSchema(
   country: string,
   type: string,
 ): z.ZodType<string> {
-  return z.string().check(
-    z.refine((value: string) => {
-      const strategy = registry.resolve(
-        country.toUpperCase(),
-        type.toUpperCase(),
-      );
-      const result = strategy.validate(value);
-      return result.success;
-    }, `Invalid ${type} for country ${country}`),
-  );
+  return z.string().refine((value: string) => {
+    const strategy = registry.resolve(
+      country.toUpperCase(),
+      type.toUpperCase(),
+    );
+    const result = strategy.validate(value);
+    return result.success;
+  }, { message: `Invalid ${type} for country ${country}` });
 }
 
 /**

@@ -10,7 +10,7 @@ describe('CuiArgentinaStrategy', () => {
 
   describe('valid CUIs', () => {
     // Well-known valid CUIL/CUIT numbers
-    const validCuis = ['20123456786', '27249aborr78'];
+    const validCuis = ['20123456786'];
 
     it('should validate a valid CUIL', () => {
       // Build a valid CUIL: prefix 20, body 12345678, check digit calculated
