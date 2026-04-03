@@ -1,5 +1,5 @@
-import { ICountryValidationRegistry } from '../../../domain/registries/country-registry.port';
-import { IIdentificationStrategy } from '../../../domain/strategies/identification-strategy.port';
+import { ICountryValidationRegistry } from '../../domain/registries/country-registry.port';
+import { IIdentificationStrategy } from '../../domain/strategies/identification-strategy.port';
 
 /**
  * Concrete implementation of the Country Validation Registry.
